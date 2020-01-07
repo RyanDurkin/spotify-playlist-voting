@@ -1,0 +1,23 @@
+{
+  "name": "spotify-playlist-voting-website",
+  "version": "0.0.0",
+  "description": "SpotifyPlaylistVotingWebsite",
+  "scripts": {
+    "start": "node server"
+  },
+  "engines": {
+    "node": "~6.10.x"
+  },
+  "author": {
+    "name": ""
+  },
+  "dependencies": {
+    "cookie-parser": "1.3.2",
+    "cors": "^2.8.4",
+    "express": "~4.16.0",
+    "firebase": "^7.2.3",
+    "firebase-admin": "^8.7.0",
+    "querystring": "~0.2.0",
+    "request": "~2.83.0"
+  }
+}

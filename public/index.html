@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Spotify Playlist Voting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="images/favicon.png">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <meta name="description" content="Vote with your friends on your shared spotify playlists and create a new playlist for the ones you liked.">
+    <meta name="author" content="blueprint-digital.com">
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Spotify Playlist Voting" />
+    <meta name="twitter:description" content="Vote with your friends on your shared spotify playlists and create a new playlist for the ones you liked." />
+    <meta name="twitter:image" content="https://spotifyplaylistvoting.azurewebsites.net/images/twitter_card-default.jpg" />
+
+    <meta property="og:title" content="Spotify Playlist Voting">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://spotifyplaylistvoting.azurewebsites.net">
+    <meta property="og:image" content="https://spotifyplaylistvoting.azurewebsites.net/images/open-graph-default.png">
+    <meta property="og:image:secure_url" content="https://spotifyplaylistvoting.azurewebsites.net/images/open-graph-default.png">
+    <meta property="og:description" content="Vote with your friends on your shared spotify playlists and create a new playlist for the ones you liked.">
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <link rel="stylesheet" href="css/main.css?v=1.1">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <h1>Spotify Playlist Voting</h1>
+        <div id="login">
+            <a href="/login" class="btn btn-lg btn-green">Log in with Spotify</a>
+        </div>
+        <div id="loggedin">
+            <div id="user-playlists">
+            </div>
+            <div id="selected-playlist-container">
+              <h2 class="selected-playlist-name"></h2>
+              <div class="panel panel-default">
+                  <div class="panel-body">
+                      <div class="btn-group pull-right">
+                        <button type="button" class="btn dropdown-toggle btn-green" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Save <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a href="#" class="save-likes">Save your likes as a new playlist</a></li>
+                          <li><a href="#" class="save-popular">Save popular tracks as a new playlist</a></li>
+                        </ul>
+                      </div>
+
+                      <a class="back-to-playlists btn btn-green pull-left">Back</a>
+                  </div>
+              </div>
+              <div id="playlist-stats">
+                <div class="row">
+                  <div class="col-xs-12 col-sm-4">
+                    <div class="widget green-bg">
+                      <div class="row">
+                          <div class="hidden-xs col-sm-4">
+                              <i class="fa fa-users widget-icon"></i>
+                          </div>
+                          <div class="col-xs-12 col-sm-8 widget-text">
+                              <span> Number of voters </span>
+                              <h2 class="font-bold number-of-voters text-right"></h2>
+                              <div class="loader-voters text-right">
+                                <div class="lds-loader"><div></div><div></div><div></div></div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-4">
+                    <div class="widget green-bg">
+                      <div class="row">
+                          <div class="hidden-xs col-sm-4">
+                              <i class="fa fa-heart widget-icon"></i>
+                          </div>
+                          <div class="col-xs-12 col-sm-8 widget-text">
+                              <span> Popular Tracks </span>
+                              <h2 class="font-bold number-of-popular-tracks text-right"></h2>
+                              <div class="loader-popular text-right">
+                                <div class="lds-loader"><div></div><div></div><div></div></div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 col-sm-4">
+                    <div class="widget green-bg">
+                      <div class="row">
+                          <div class="hidden-xs col-xs-4">
+                              <i class="fa fa-thumbs-up widget-icon"></i>
+                          </div>
+                          <div class="col-xs-12 col-sm-8 widget-text">
+                              <span> Your Liked Tracks </span>
+                              <h2 class="font-bold number-of-liked-tracks text-right"></h2>
+                              <div class="loader-liked text-right">
+                                <div class="lds-loader"><div></div><div></div><div></div></div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="selected-playlist-tracks"></div>
+            </div>
+            <p class="created-by">
+              Created by <a href="https://www.blueprint-digital.com" target="_blank">Blueprint Digital</a>
+            </p>
+        </div>
+    </div>
+
+    <script id="user-playlists-template" type="text/x-handlebars-template">
+      <h2>Pick a playlist:</h2>
+      <table class="table table-striped">
+        <thead>
+          <th>
+            Name
+          </th>
+          <th></th>
+        </thead>
+          {{#items}}
+            <tr>
+              <td>
+                  <a href="#" id="{{id}}" class="btn-vote text-green">{{name}}</a>
+                </td>
+                <td>
+                  <a href="#" id="{{id}}" class="btn-vote btn btn-green">Select</a>
+                </td>
+            </tr>
+          {{/items}}
+      </table>
+    </script>
+
+    <script id="selected-playlist-tracks-template" type="text/x-handlebars-template">
+      <div class="row">
+          {{#each items}}
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="thumbnail">
+              
+              <iframe src="https://open.spotify.com/embed/track/{{track.id}}" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+              
+              <div class="caption">
+                <p>
+                    <a href="#" id="{{track.id}}" class="btn-like btn btn-default">
+                        <span id="{{track.id}}" class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                    </a>
+                      <a href="#" id="{{track.id}}" class="btn-dislike btn btn-default">
+                          <span id="{{track.id}}" class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+                      </a>
+                </p>
+                <p>
+                  Added by: {{added_by.id}}
+                </p>
+                <p>
+                  Likes: <span id="likes-{{track.id}}">{{track.likes}}</span>
+                </p>
+                <p>
+                    Dislikes: <span id="dislikes-{{track.id}}">{{track.dislikes}}</span>
+                  </p>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+    </script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.4.2/handlebars.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="//stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@9.1.5/dist/sweetalert2.all.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
